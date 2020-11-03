@@ -1,0 +1,162 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 21px;
+  color: #fefefe;
+  background-color: #1e1f26;
+}
+
+a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.container {
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: 2em 4em 0 4em;
+  max-width: 960px;
+}
+
+header {
+  background-color: #0e0e14;
+  border-bottom-width: 4px;
+  border-bottom-style: dashed;
+  border-color: #be9f72;
+}
+
+header .container {
+  display: flex;
+}
+
+header .container > * {
+  flex: 1 100%;
+}
+
+header .header-logo {
+  display: block;
+  padding: 1.5em;
+}
+
+header .header-logo img {
+  display: block;
+  margin: 2em auto;
+  width: 350px;
+}
+
+header .header-desc {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+header .header-desc h2 {
+  font-size: 1.75em;
+  line-height: 1.1em;
+  margin: 0 0 1em 0;
+}
+
+header .header-desc strong {
+  color: #be9f72;
+  font-weight: 700;
+}
+
+header .header-desc .button {
+  width: 120px;
+  height: 30px;
+  display: block;
+  background-color: #107c10;
+  border: 1px solid #ffffff;
+  text-align: center;
+  font-size: 15px;
+  line-height: 30px;
+}
+
+header .header-desc .button:hover {
+  background-color: #aaaaaa;
+  opacity: 0.6;
+}
+
+main {
+  background-color: #1e1f26;
+}
+
+section .section-title {
+  display: inline-block;
+  font-size: 3em;
+  line-height: 1em;
+  font-weight: 700;
+  color: #be9f72;
+}
+
+section .section-title h1 {
+  margin-bottom: 0.5rem;
+}
+
+section .section-title h1:hover {
+  cursor: default;
+}
+
+section p {
+  font-size: 1.33em;
+  line-height: 1.25em;
+  font-family: 'Merriweather', serif;
+  margin: 0 0 1rem 0;
+}
+
+.resources ul {
+  display: grid;
+  margin-top: 0.5em;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1em 2em;
+}
+
+.resources ul .resource-link .resource-title {
+  display: inline-block;
+  margin: 0 0 0.5em 0;
+  font-size: 1.75em;
+  font-weight: 700;
+  line-height: 1.1em;
+}
+
+.resources ul .resource-link .resource-title:hover {
+  text-decoration: underline;
+}
+
+.resources ul .resource-link .resource-desc p {
+  font-size: 1.2em;
+}
+
+.roster .section-title {
+  margin: 0 0 0.5em 0;
+}
+
+.roster ul {
+  display: flex;
+  justify-content: center;
+  align-content: space-between;
+  flex-flow: row wrap;
+}
+
+.roster ul li {
+  flex: 0;
+  flex-basis: 15%;
+  display: block;
+  margin-bottom: 1em;
+  padding: 0.25em;
+}
+
+.roster ul li a {
+  display: block;
+  text-align: center;
+}
+
+.roster ul li img {
+  display: block;
+  width: 75%;
+  margin: 0 auto 1em auto;
+  border-radius: 100%;
+}
