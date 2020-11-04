@@ -29,7 +29,6 @@ header {
 
 	.container {
 		display: flex;
-		// flex-flow: row wrap;
 		
 		> * {
 			flex: 1 100%;
@@ -37,13 +36,12 @@ header {
 	}
 	
 	.header-logo {
-		display: block;
 		padding: 1.5em;
 	
 		img {
 			display: block;
 			margin: 2em auto;
-			width: 350px;
+			width: 100%;
 		}
 	}
 	
@@ -51,6 +49,7 @@ header {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
+		padding: 1.5em;
 
 		h2 {
 			font-size: 1.75em;
@@ -97,21 +96,10 @@ section {
 
 		h1 {
 			margin-bottom: 0.5rem;
-
-	// 		&:before {
-	// 			content: "# ";
-	// 			opacity: 0;
-	// 		}
-
+			
 			&:hover {
-			//	text-decoration: underline;
 				cursor: default;
 			}
-
-	// 		&:hover::before {
-	// 			opacity: 1;
-	// 			text-decoration: none;
-	// 		}
 		}
 	}
 	
@@ -149,41 +137,83 @@ section {
 				p {
 					font-size: 1.2em;
 				}
-			//	line-heigt: 1.1em;
 			}
 		}
 	}
 }
 
 .roster {
+	margin-bottom: 1em;
+	
 	.section-title {
 		margin: 0 0 0.5em 0;
 	}
 
 	ul {
 		display: flex;
-		justify-content: center;
-		align-content: space-between;
 		flex-flow: row wrap;
-
-		li {
-			flex: 0;
-			flex-basis: 15%;
-			display: block;
-			margin-bottom: 1em;
-			padding: 0.25em;
+		justify-content: space-around;
+		list-style: none;
+		text-align: center;
 		
+		li {
+			display: inline;
+			width: 150px;
+			padding: 0 0.5em;
+			
 			a {
 				display: block;
-				text-align: center;
 			}
-
+			
 			img {
 				display: block;
-				width: 75%;
+				width: 100%;
 				margin: 0 auto 1em auto;
 				border-radius: 100%;
 			}
+			
+			p {
+				font-size: 1em;
+			}
+		}
+	}
+}
+
+// Tablets
+@media all and (max-width: 800px) {
+	.container {
+		padding: 1.5em 3em 0 3em;
+	}
+	
+	header {
+		.container {
+			flex-direction: column;
+		}
+	}
+	
+	.resources {
+		ul {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+}
+
+// Phones
+@media all and (max-width: 600px) {
+	.container {
+		padding: 1em 2em 0 2em;
+	}
+
+	header {
+		.container > * {
+			padding-left: 0;
+			padding-right: 0;
+		}
+	}
+	
+	.resources {
+		ul {
+			grid-template-columns: repeat(1, 1fr);
 		}
 	}
 }

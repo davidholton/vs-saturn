@@ -37,20 +37,20 @@ header .container > * {
 }
 
 header .header-logo {
-  display: block;
   padding: 1.5em;
 }
 
 header .header-logo img {
   display: block;
   margin: 2em auto;
-  width: 350px;
+  width: 100%;
 }
 
 header .header-desc {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  padding: 1.5em;
 }
 
 header .header-desc h2 {
@@ -130,33 +130,64 @@ section p {
   font-size: 1.2em;
 }
 
+.roster {
+  margin-bottom: 1em;
+}
+
 .roster .section-title {
   margin: 0 0 0.5em 0;
 }
 
 .roster ul {
   display: flex;
-  justify-content: center;
-  align-content: space-between;
   flex-flow: row wrap;
+  justify-content: space-around;
+  list-style: none;
+  text-align: center;
 }
 
 .roster ul li {
-  flex: 0;
-  flex-basis: 15%;
-  display: block;
-  margin-bottom: 1em;
-  padding: 0.25em;
+  display: inline;
+  width: 150px;
+  padding: 0 0.5em;
 }
 
 .roster ul li a {
   display: block;
-  text-align: center;
 }
 
 .roster ul li img {
   display: block;
-  width: 75%;
+  width: 100%;
   margin: 0 auto 1em auto;
   border-radius: 100%;
+}
+
+.roster ul li p {
+  font-size: 1em;
+}
+
+@media all and (max-width: 800px) {
+  .container {
+    padding: 1.5em 3em 0 3em;
+  }
+  header .container {
+    flex-direction: column;
+  }
+  .resources ul {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media all and (max-width: 600px) {
+  .container {
+    padding: 1em 2em 0 2em;
+  }
+  header .container > * {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .resources ul {
+    grid-template-columns: repeat(1, 1fr);
+  }
 }
