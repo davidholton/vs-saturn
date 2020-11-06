@@ -107,6 +107,33 @@ section p {
   margin: 0 0 1rem 0;
 }
 
+.about ol {
+  list-style: inside;
+}
+
+.about ol li {
+  font-size: 1.33em;
+  margin-bottom: 0.5em;
+}
+
+.about ol li a:hover {
+  text-decoration: underline;
+}
+
+.home-button {
+  display: inline-block;
+  padding: 0.5em 1.5em;
+  margin-top: 2em;
+  background-color: #444455;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.home-button:hover {
+  background-color: #555566;
+  color: #eeeeee;
+}
+
 .resources ul {
   display: grid;
   margin-top: 0.5em;
@@ -154,6 +181,7 @@ section p {
 
 .roster ul li a {
   display: block;
+  font-size: 1em;
 }
 
 .roster ul li img {
@@ -164,7 +192,7 @@ section p {
 }
 
 .roster ul li p {
-  font-size: 1em;
+  font-size: 0.75em;
 }
 
 @media all and (max-width: 800px) {
