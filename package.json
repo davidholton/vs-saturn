@@ -18,12 +18,27 @@
 			{
 				"command": "vs-saturn.start",
 				"category": "Saturn",
-				"title": "Start Timer"
+				"title": "Start timer"
 			},
 			{
-				"command": "vs-saturn.notes",
+				"command": "vs-saturn.tasklist",
 				"category": "Saturn",
-				"title": "Notes"
+				"title": "View task list"
+			},
+			{
+				"command": "vs-saturn.addtask",
+				"category": "Saturn",
+				"title": "Add task"
+			},
+			{
+				"command": "vs-saturn.removetask",
+				"category": "Saturn",
+				"title": "Remove task"
+			},
+			{
+				"command": "vs-saturn.cleartasks",
+				"category": "Saturn",
+				"title": "Clear tasks"
 			}
 		]
 	},
