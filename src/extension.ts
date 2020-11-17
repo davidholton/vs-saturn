@@ -161,7 +161,7 @@ export function activate(context: vscode.ExtensionContext) {
 	const saturnTimerButton: vscode.StatusBarItem = newStatusBarItem({
 		alignment: vscode.StatusBarAlignment.Left,
 		priority: --statusBarPriority,
-		text: "12:18",
+		text: "00:00",
 		tooltip: "Time left in current cycle",
 	});
 
@@ -213,10 +213,48 @@ export function activate(context: vscode.ExtensionContext) {
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json
+
+	/**
+	 * Temporary variables just for showing UI prototype functionality
+	 */
+	let state: string = "off";
+	let defaultTime: number = 4;
+	let timeLeft: number = defaultTime;
+	let cycles: number = 1;
+	let interval: NodeJS.Timeout;
+
 	context.subscriptions.push(vscode.commands.registerCommand("vs-saturn.start", () => {
 		console.log("vs-saturn.start");
 		
-		saturnStartButton.text = saturnStartButton.text === "$(play)" ? "$(debug-pause)" : "$(play)";
+		// saturnStartButton.text = saturnStartButton.text === "$(play)" ? "$(debug-pause)" : "$(play)";
+		if (state === "on") {
+			// Switch to the off-state
+			saturnStartButton.text = "$(play)";
+			clearInterval(interval);
+
+			state = "off";
+		} else if (state === "off") {
+			// Switch to the on-state
+			saturnStartButton.text = "$(debug-pause)";
+			interval = setInterval(() => {
+				// Dirty code that should be removed in next version
+				// only here for the visuals
+				if (timeLeft < 0) {
+					saturnCheckmarks.text = generateCheckmarks((++cycles) % 5, 4);
+					timeLeft = defaultTime;
+
+					vscode.window.showInformationMessage(`Saturn: Take a ${cycles === 0 ? "long": "short"} break`, "Snooze");
+				}
+
+				let min: number = Math.floor(timeLeft / 60);
+				let sec: number = Math.floor(timeLeft % 60);
+				saturnTimerButton.text = `${min < 10 ? "0": ""}${min}:${sec < 10 ? "0": ""}${sec}`;
+
+				timeLeft--;	
+			}, 1000);			
+
+			state = "on";
+		}
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand("vs-saturn.tasklist", async () => {
