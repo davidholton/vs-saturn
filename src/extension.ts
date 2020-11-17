@@ -218,7 +218,7 @@ export function activate(context: vscode.ExtensionContext) {
 	 * Temporary variables just for showing UI prototype functionality
 	 */
 	let state: string = "off";
-	let defaultTime: number = 4;
+	let defaultTime: number = 60;
 	let timeLeft: number = defaultTime;
 	let cycles: number = 1;
 	let interval: NodeJS.Timeout;
