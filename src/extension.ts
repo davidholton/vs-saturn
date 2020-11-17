@@ -138,7 +138,7 @@ function newQuickPickItem(taskItem: ITask, picked: boolean = true): vscode.Quick
 	const quickPickItem: vscode.QuickPickItem = {label: taskItem.label};
 
 	if (taskItem.completed === true) {
-		quickPickItem.description = "Completed";
+		quickPickItem.description = "$(check) Completed";
 		quickPickItem.picked = picked && true;
 	}
 
@@ -218,10 +218,23 @@ export function activate(context: vscode.ExtensionContext) {
 	 * Temporary variables just for showing UI prototype functionality
 	 */
 	let state: string = "off";
-	let defaultTime: number = 4;
+	let defaultTime: number = 30;
 	let timeLeft: number = defaultTime;
-	let cycles: number = 1;
+	let cycles: number = 0;
 	let interval: NodeJS.Timeout;
+
+	context.subscriptions.push(vscode.commands.registerCommand("vs-saturn.reset", () => {
+		console.log("vs-saturn.reset");
+
+		clearInterval(interval);
+
+		state = "off";
+		timeLeft = defaultTime;
+		cycles = 0;
+
+		saturnTimerButton.text = "00:00";
+		saturnStartButton.text = "$(play)";
+	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand("vs-saturn.start", () => {
 		console.log("vs-saturn.start");
@@ -261,12 +274,12 @@ export function activate(context: vscode.ExtensionContext) {
 		console.log("vs-saturn.tasklist");
 
 		const items: Array<vscode.QuickPickItem> = taskList.tasks.map((x: ITask) => newQuickPickItem(x));
-		// // For some reason if you declare and define the options with canPickMany
-		// // you wont be able to use a for loop on the result of showQuickPick intuitively?
-		// const options: vscode.QuickPickOptions = {
-		// 	placeHolder: "Search for a task",
-		// 	canPickMany: true,
-		// };
+		// For some reason if you declare and define the options with canPickMany
+		// you wont be able to use a for loop on the result of showQuickPick intuitively?
+		const options: vscode.QuickPickOptions = {
+			placeHolder: "Search for a task",
+			canPickMany: true,
+		};
 
 		// There is also an issue with createQuickPick where I cannot have the selected field of the
 		// QuickPickItems display when the QuickPick is shown. Which means we can not use the events

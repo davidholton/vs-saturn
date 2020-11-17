@@ -21,6 +21,11 @@
 				"title": "Start timer"
 			},
 			{
+				"command": "vs-saturn.reset",
+				"category": "Saturn",
+				"title": "Reset Saturn"
+			},
+			{
 				"command": "vs-saturn.tasklist",
 				"category": "Saturn",
 				"title": "View task list"
