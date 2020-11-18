@@ -1,6 +1,6 @@
 body, html {
   margin: 0;
-  padding: 0;
+  padding: 0 0 2em 0;
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
   font-size: 16px;
@@ -12,6 +12,11 @@ body, html {
 a {
   color: #fff;
   text-decoration: none;
+}
+
+code {
+  background-color: rgba(0, 0, 0, .5);
+  padding: 0 0.333em;
 }
 
 .container {
@@ -193,6 +198,17 @@ section p {
 
 .roster ul li p {
   font-size: 0.75em;
+}
+
+.main-h {
+  font-family: 'Merriweather', serif;
+  font-size: 1.5em;
+  line-height: 1.75em;
+  font-weight: 700;
+}
+
+.main-p {
+  font-family: 'Source Sans Pro', sans-serif;
 }
 
 @media all and (max-width: 800px) {

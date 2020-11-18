@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<!--  Meta  -->
+	<meta charset="UTF-8" />
+	<title>VS Saturn - Prototype</title>
+
+	<!--  Styles  -->
+	<link rel="stylesheet" href="../styles/reset.css">
+	<link rel="stylesheet" href="../styles/index.processed.css">
+	
+	<!--- Fonts -->
+	<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;700&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300&display=swap" rel="stylesheet">
+
+	<!--- Favicon -->
+	<link rel="icon" type="image/png" href="../images/favicon.png"/>
+
+	<!--
+		author: David Holton
+	-->
+</head>
+<body>
+	<header>
+		<div class="container">
+			<a class="header-logo" href="../" title="VS Saturn Home">
+				<img src="../images/saturn.png" alt="VS Saturn Logo">
+			</a>
+			<div class="header-desc">
+				<h2><strong>Saturn</strong> is a Visual Studio Code extension that promotes time management and productivity through the Pomodoro technique.</h2>
+				<a class="button" href="#">Install</a>
+			</div>
+		</div>
+	</header>	
+	<main>
+		<section class="about">
+			<div class="container">
+				<a href="#prototype" class="section-title" id="prototype">
+					<h1>Prototype</h1>
+				</a>
+				<p>How to install and run the prototype builds</p>
+				<h1 class="main-h">Prerequisites</h1>
+				<p class="main-p">Firstly Visual Studio Code is required for running the extension on. Links to each platform can be found on the Visual Studio website.
+				</p>
+				<ol>
+					<li><a href="https://code.visualstudio.com/download/">https://code.visualstudio.com/download</a></li>
+				</ol>
+				<br>
+				<p class="main-p">Installer executables and Linux binaries for Node.js can be found on their website download page. No special install options are required.
+				</p>
+				<ol>
+					<li><a href="https://nodejs.org/en/download/">https://nodejs.org/en/download</a></li>
+				</ol>
+				<br>
+				<p class="main-p">Then download and unpack the latest Prototype release from the GitHub repository.
+				</p>
+				<ol>
+					<p>Prototype v1</p>
+					<li><a href="https://github.com/davidholton/vs-saturn/releases/tag/prototype-v1.0/">https://github.com/davidholton/vs-saturn/releases/tag/prototype-v1.0</a></li>
+					<p>Prototype v2</p>
+					<li><a href="#">Unreleased</a></li>
+				</ol>
+				<br>
+				<h1 class="main-h">Installation and Running</h1>
+				<p class="main-p">Once unpacked run <code>npm install</code> inside the unpacked prototype folder. Open the prototype project in Visual Studio Code by either dragging the unpacked prototype folder onto an open Visual Studio Code application or running <code>code .</code> in a terminal inside the unpacked prototype folder if Visual Studio Code is recognized by your PATH.
+				</p>
+				<br>
+				<p class="main-p">To run the extension hit “F5” while in Visual Studio Code or from the menu bar click <code>Run > Start Debugging</code>. From there a Visual Studio Code Extension Development Host window will appear. In the bottom left Saturn’s interface will appear and commands will be found in the command palette (Ctrl+Shift+P or Cmd+Shift+P on OS X). Press the play button to start Saturn.
+				</p>
+				<a href="../" class="home-button">Home</a>
+			</div>
+		</section>
+	</main>
+</body>
+</html>
