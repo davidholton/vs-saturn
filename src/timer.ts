@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-export enum TimerStates {
+export const enum TimerStates {
 	RUNNING,
 	PAUSED
 }
@@ -37,7 +37,7 @@ export class Timer {
 	 * Resume the timer. 
 	 * @returns If the function was able to resume the timer.
 	 */
-	resumeTimer(): boolean {
+	resume(): boolean {
 		if (this.state === TimerStates.RUNNING) {
 			// Already running
 			return false;
@@ -54,7 +54,7 @@ export class Timer {
 	 * Pause the timer.
 	 * @returns If the function was able to pause the timer.
 	 */
-	pauseTimer(): boolean {
+	pause(): boolean {
 		if (this.state === TimerStates.PAUSED || this.interval === undefined) {
 			// Already paused
 			return false;
@@ -70,16 +70,16 @@ export class Timer {
 	 * Called on each interval of the Timer to subtract the time. Will call the [onCompleted()](#onCompleted) and [onTick()](#onTick) functions if applicable.
 	 */
 	tick(): void {
+		if (this.onTick !== undefined) {
+			this.onTick();
+		}
+
 		if (this.timeLeft <= 0) {
-			this.pauseTimer();
+			this.pause();
 
 			if (this.onCompleted !== undefined) {
 				this.onCompleted();
 			}
-		}
-
-		if (this.onTick !== undefined) {
-			this.onTick();
 		}
 
 		this.timeLeft -= INTERVAL_TIME_OUT / 1000;
@@ -102,10 +102,11 @@ export class Timer {
 
 	/**
 	 * Reset and pause the timer.
+	 * @param time Time to reset the timer to, defaults to the defaultTime.
 	 */
-	resetTimer(): void {
-		this.pauseTimer();
-		this.timeLeft = this.defaultTime;
+	reset(time: number = this.defaultTime): void {
+		this.pause();
+		this.timeLeft = time;
 
 		return;
 	}
