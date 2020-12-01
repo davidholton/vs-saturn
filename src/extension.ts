@@ -1,6 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
+import { Pomodoro } from "./pomodoro";
 
 interface ITask {
 	label: string,
@@ -168,7 +169,7 @@ export function activate(context: vscode.ExtensionContext) {
 	const saturnCheckmarks: vscode.StatusBarItem = newStatusBarItem({
 		alignment: vscode.StatusBarAlignment.Left,
 		priority: --statusBarPriority,
-		text: generateCheckmarks(1, 4),
+		text: generateCheckmarks(0, 4),
 		tooltip: "Current progress of cycle"
 	});
 
@@ -214,23 +215,24 @@ export function activate(context: vscode.ExtensionContext) {
 	// Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json
 
-	/**
-	 * Temporary variables just for showing UI prototype functionality
-	 */
-	let state: string = "off";
-	let defaultTime: number = 30;
-	let timeLeft: number = defaultTime;
-	let cycles: number = 0;
-	let interval: NodeJS.Timeout;
+	const pomodoro = new Pomodoro();
+	pomodoro.onCompletedCycle = (completed: number, total: number) => {
+		saturnCheckmarks.text = generateCheckmarks(completed, total);
+	};
+
+	pomodoro.snoozePrompt = async (): Promise <string | undefined> => {
+		const result = await vscode.window.showWarningMessage(`Saturn: Take a break?`, "Snooze");
+		return result;
+	};
+
+	pomodoro.onTick = () => {
+		saturnTimerButton.text = pomodoro.timer.toString();
+	};
 
 	context.subscriptions.push(vscode.commands.registerCommand("vs-saturn.reset", () => {
 		console.log("vs-saturn.reset");
 
-		clearInterval(interval);
-
-		state = "off";
-		timeLeft = defaultTime;
-		cycles = 0;
+		pomodoro.reset();
 
 		saturnTimerButton.text = "00:00";
 		saturnStartButton.text = "$(play)";
@@ -238,35 +240,15 @@ export function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(vscode.commands.registerCommand("vs-saturn.start", () => {
 		console.log("vs-saturn.start");
-		
-		// saturnStartButton.text = saturnStartButton.text === "$(play)" ? "$(debug-pause)" : "$(play)";
-		if (state === "on") {
-			// Switch to the off-state
-			saturnStartButton.text = "$(play)";
-			clearInterval(interval);
 
-			state = "off";
-		} else if (state === "off") {
-			// Switch to the on-state
-			saturnStartButton.text = "$(debug-pause)";
-			interval = setInterval(() => {
-				// Dirty code that should be removed in next version
-				// only here for the visuals
-				if (timeLeft < 0) {
-					saturnCheckmarks.text = generateCheckmarks((++cycles) % 5, 4);
-					timeLeft = defaultTime;
-
-					vscode.window.showInformationMessage(`Saturn: Take a ${cycles === 0 ? "long": "short"} break`, "Snooze");
-				}
-
-				let min: number = Math.floor(timeLeft / 60);
-				let sec: number = Math.floor(timeLeft % 60);
-				saturnTimerButton.text = `${min < 10 ? "0": ""}${min}:${sec < 10 ? "0": ""}${sec}`;
-
-				timeLeft--;	
-			}, 1000);			
-
-			state = "on";
+		if (saturnStartButton.text === "$(play)") {
+			if (pomodoro.resume()) {
+				saturnStartButton.text = "$(debug-pause)";
+			}
+		} else {
+			if (pomodoro.pause()) {
+				saturnStartButton.text = "$(play)";
+			}
 		}
 	}));
 
@@ -289,7 +271,7 @@ export function activate(context: vscode.ExtensionContext) {
 			canPickMany: true,
 			ignoreFocusOut: true,
 		});
-		
+
 		if (result) {
 			// Creates an array of each picked item's label string
 			const completedTasks: Array<string> = [];
@@ -346,7 +328,7 @@ export function activate(context: vscode.ExtensionContext) {
 		taskList.tasks = [];
 
 	}));
-	
+
 	// Just add some temporary tasks into the list for show
 	taskList.addTask("Walk to get coffee");
 	taskList.addTask("Stretch");
@@ -354,4 +336,4 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 // this method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() { }
