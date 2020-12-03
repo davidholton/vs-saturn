@@ -146,6 +146,35 @@ function newQuickPickItem(taskItem: ITask, picked: boolean = true): vscode.Quick
 	return quickPickItem;
 }
 
+function getSettings(): Map<string, number> {
+	const config = vscode.workspace.getConfiguration();
+	
+	let settings: Map<string, number> = new Map([
+		["saturn.cycle.cycles", 4],
+		["saturn.timers.workCycleTime", 25],
+		["saturn.timers.shortBreakTime", 5],
+		["saturn.timers.longBreakTime", 10],
+		["saturn.timers.snoozeTime", 5]
+	]);
+
+	for (let [setting, value] of settings) {
+		// It is under my impression that typecasting an unknown like this is
+		let customValue = config.get(setting) as number;
+		if (typeof customValue !== "number") {
+			customValue = value;
+		}
+
+		if (setting.startsWith("saturn.timers")) {
+			// Converts any setting inside "saturn.timers" to seconds
+			customValue *= 60;
+		}
+
+		settings.set(setting, customValue);
+	}
+
+	return settings;
+}
+
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -169,7 +198,7 @@ export function activate(context: vscode.ExtensionContext) {
 	const saturnCheckmarks: vscode.StatusBarItem = newStatusBarItem({
 		alignment: vscode.StatusBarAlignment.Left,
 		priority: --statusBarPriority,
-		text: generateCheckmarks(0, 4),
+		text: "",
 		tooltip: "Current progress of cycle"
 	});
 
@@ -215,7 +244,18 @@ export function activate(context: vscode.ExtensionContext) {
 	// Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json
 
-	const pomodoro = new Pomodoro();
+	const settings: Map<string, number> = getSettings();
+	const args: number[] = [
+		settings.get("saturn.cycle.cycles") as number,
+		settings.get("saturn.timers.workCycleTime") as number,
+		settings.get("saturn.timers.shortBreakTime") as number,
+		settings.get("saturn.timers.longBreakTime") as number,
+		settings.get("saturn.timers.snoozeTime") as number
+	];
+
+	saturnCheckmarks.text = generateCheckmarks(0, args[0]);
+	let pomodoro = new Pomodoro(args[0], args[1], args[3], args[4], args[5]);
+	
 	pomodoro.onCompletedCycle = (completed: number, total: number) => {
 		saturnCheckmarks.text = generateCheckmarks(completed, total);
 	};
@@ -233,6 +273,18 @@ export function activate(context: vscode.ExtensionContext) {
 		console.log("vs-saturn.reset");
 
 		pomodoro.reset();
+
+		const settings: Map<string, number> = getSettings();
+		const args: number[] = [
+			settings.get("saturn.cycle.cycles") as number,
+			settings.get("saturn.timers.workCycleTime") as number,
+			settings.get("saturn.timers.shortBreakTime") as number,
+			settings.get("saturn.timers.longBreakTime") as number,
+			settings.get("saturn.timers.snoozeTime") as number
+		];
+
+		saturnCheckmarks.text = generateCheckmarks(0, args[0]);
+		pomodoro = new Pomodoro(args[0], args[1], args[3], args[4], args[5]);
 
 		saturnTimerButton.text = "00:00";
 		saturnStartButton.text = "$(play)";

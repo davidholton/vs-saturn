@@ -1,15 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import {Timer} from "./timer";
 
-// Time in milliseconds
-const enum DEFAULT {
-	NUM_BREAKS = 4,
-	// Time
-	SNOOZE_TIME = 10,
-	SHORT_BREAK = 10,
-	LONG_BREAK = 10,
-};
-
 const enum PomodoroStates {
 	WORKING,
 	BREAK,
@@ -23,17 +14,23 @@ export class Pomodoro {
 	cycles: number;
 	maxCycles: number;
 
-	workTime: number = 5;
-	snoozeTime: number = 2; 
-	longBreakTime: number = 20;
-	shortBreakTime: number = 2;
+	workTime: number;
+	shortBreakTime: number;
+	longBreakTime: number;
+	snoozeTime: number; 
 
 	public onCompletedCycle: undefined | {(completed: number, total: number): void};
 	public snoozePrompt: undefined | {(): Promise<string | undefined>};
 	public onTick: undefined | {(): void};
 
-	constructor() {
-		this.timer = new Timer(this.workTime);
+	constructor(maxCycles: number, workTime: number, shortBreakTime: number, longBreakTime: number, snoozeTime: number) { 
+		this.maxCycles = maxCycles;
+		this.workTime = workTime;
+		this.shortBreakTime = shortBreakTime;
+		this.longBreakTime = longBreakTime;
+		this.snoozeTime = snoozeTime;
+		
+		this.timer = new Timer(workTime);
 		this.timer.onCompleted = () => {this.onCompleted();};
 		this.timer.onTick = () => {
 			if (this.onTick) {
@@ -43,7 +40,6 @@ export class Pomodoro {
 
 		this.state = PomodoroStates.PAUSED;
 		this.cycles = 0;
-		this.maxCycles = 4;
 
 		return;
 	}

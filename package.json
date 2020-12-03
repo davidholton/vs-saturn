@@ -45,7 +45,42 @@
 				"category": "Saturn",
 				"title": "Clear tasks"
 			}
-		]
+		],
+		"configuration": {
+			"title": "Saturn",
+			"properties": {
+				"saturn.cycle.cycles": {
+					"type": "number",
+					"default": 4,
+					"minimum": 1,
+					"markdownDescription": "The number of checkpoints before a long break. Saturn Reset"
+				},
+				"saturn.timers.workCycleTime": {
+					"type": "number",
+					"default": 25,
+					"minimum": 1,
+					"markdownDescription": "Specifies the length a work cycle will take in minutes."
+				},
+				"saturn.timers.shortBreakTime": {
+					"type": "number",
+					"default": 5,
+					"minimum": 0,
+					"markdownDescription": "Specifies the length a short break will take in minutes."
+				},
+				"saturn.timers.longBreakTime": {
+					"type": "number",
+					"default": 10,
+					"minimum": 0,
+					"markdownDescription": "Specifies the length a long break will take in minutes."
+				},
+				"saturn.timers.snoozeTime": {
+					"type": "number",
+					"default": 5,
+					"minimum": 0,
+					"markdownDescription": "Specifies the length a snooze will take in minutes."
+				}
+			}
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
