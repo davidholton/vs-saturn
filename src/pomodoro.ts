@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import {Timer} from "./timer";
 
-const enum PomodoroStates {
+export const enum PomodoroStates {
 	WORKING,
 	BREAK,
 	PAUSED,
@@ -20,7 +20,7 @@ export class Pomodoro {
 	snoozeTime: number; 
 
 	public onCompletedCycle: undefined | {(completed: number, total: number): void};
-	public snoozePrompt: undefined | {(): Promise<string | undefined>};
+	public snoozePrompt: undefined | {(): void};
 	public onTick: undefined | {(): void};
 
 	constructor(maxCycles: number, workTime: number, shortBreakTime: number, longBreakTime: number, snoozeTime: number) { 
@@ -45,9 +45,9 @@ export class Pomodoro {
 	}
 
 	onCompleted(): void {
-		if (this.promptToSnooze()) {
-			return;
-		}
+		if (this.snoozePrompt) {
+			this.snoozePrompt();
+		}//this.promptToSnooze();
 
 		if (this.state === PomodoroStates.WORKING) {
 			this.cycles = (this.cycles + 1) % (this.maxCycles + 1);
@@ -83,23 +83,17 @@ export class Pomodoro {
 		return;
 	}
 
-	// The most vulgar code I've ever written. I have learned nothing about Promises.
-	private async promptToSnooze(): Promise<boolean> {
-		if (this.snoozePrompt) {
-			// Return true or false from a prompt to add snooze time
-			await this.snoozePrompt().then((result: any) => {
-				if (result === "Snooze") {
-					this.timer.addTime(this.snoozeTime);
-					this.timer.resume();
-
-					return true;
-				}
-
-				return false;
-			});
+	public snooze(prevState: PomodoroStates, prevCycles: number): void {
+		this.state = prevState;
+		this.cycles = prevCycles;
+		if (this.onCompletedCycle) {
+			this.onCompletedCycle(this.cycles, this.maxCycles);
 		}
 
-		return false;
+		this.timer.reset(this.snoozeTime);
+		this.timer.resume();
+
+		return;
 	}
 
 	resume(): boolean {
@@ -131,8 +125,10 @@ export class Pomodoro {
 	}
 
 	reset(): void {
-		this.timer.reset();
+		this.timer.reset(this.workTime);
+		
 		this.state = PomodoroStates.PAUSED;
+		this.cycles = 0;
 
 		return;
 	}

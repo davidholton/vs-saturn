@@ -1,7 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
-import { Pomodoro } from "./pomodoro";
+import { Pomodoro, PomodoroStates } from "./pomodoro";
 
 interface ITask {
 	label: string,
@@ -254,15 +254,30 @@ export function activate(context: vscode.ExtensionContext) {
 	];
 
 	saturnCheckmarks.text = generateCheckmarks(0, args[0]);
-	let pomodoro = new Pomodoro(args[0], args[1], args[3], args[4], args[5]);
+	let pomodoro = new Pomodoro(args[0], args[1], args[2], args[3], args[4]);
 	
 	pomodoro.onCompletedCycle = (completed: number, total: number) => {
 		saturnCheckmarks.text = generateCheckmarks(completed, total);
 	};
 
-	pomodoro.snoozePrompt = async (): Promise <string | undefined> => {
-		const result = await vscode.window.showWarningMessage(`Saturn: Take a break?`, "Snooze");
-		return result;
+	pomodoro.snoozePrompt = (): void => {
+		// let result = await vscode.window.showWarningMessage(`Saturn: Take a break?`, "Snooze");
+		// console.log(typeof result);
+		// if (typeof result === "string") {
+		// 	console.log("string");
+		// 	Promise.resolve(true);
+		// }
+		// return Promise.resolve(false);
+		let prevState: PomodoroStates = pomodoro.state;
+		let prevCycles: number = pomodoro.cycles;
+
+		vscode.window.showInformationMessage(`Saturn: Snooze the current ${prevState === PomodoroStates.BREAK ? "break": "work"} cycle?`, "Snooze").then((result) => {
+			if (result === "Snooze") {
+				pomodoro.snooze(prevState, prevCycles);
+			}
+		});
+
+		return;
 	};
 
 	pomodoro.onTick = () => {
@@ -272,8 +287,6 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(vscode.commands.registerCommand("vs-saturn.reset", () => {
 		console.log("vs-saturn.reset");
 
-		pomodoro.reset();
-
 		const settings: Map<string, number> = getSettings();
 		const args: number[] = [
 			settings.get("saturn.cycle.cycles") as number,
@@ -282,26 +295,30 @@ export function activate(context: vscode.ExtensionContext) {
 			settings.get("saturn.timers.longBreakTime") as number,
 			settings.get("saturn.timers.snoozeTime") as number
 		];
-
-		saturnCheckmarks.text = generateCheckmarks(0, args[0]);
-		pomodoro = new Pomodoro(args[0], args[1], args[3], args[4], args[5]);
-
+		
 		saturnTimerButton.text = "00:00";
 		saturnStartButton.text = "$(play)";
+		saturnCheckmarks.text = generateCheckmarks(0, args[0]);
+
+		pomodoro.maxCycles = args[0];
+		pomodoro.workTime = args[1];
+		pomodoro.shortBreakTime = args[2];
+		pomodoro.longBreakTime = args[3];
+		pomodoro.snoozeTime = args[4];
+
+		pomodoro.reset();
+
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand("vs-saturn.start", () => {
 		console.log("vs-saturn.start");
 
-		if (saturnStartButton.text === "$(play)") {
-			if (pomodoro.resume()) {
-				saturnStartButton.text = "$(debug-pause)";
-			}
-		} else {
-			if (pomodoro.pause()) {
-				saturnStartButton.text = "$(play)";
-			}
+		if (pomodoro.resume()) {
+			saturnStartButton.text = "$(debug-pause)";
+		} else if (pomodoro.pause()) {
+			saturnStartButton.text = "$(play)";
 		}
+
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand("vs-saturn.tasklist", async () => {

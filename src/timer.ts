@@ -22,7 +22,6 @@ export class Timer {
 	 * @param defaultTime The starting time in seconds for the timer.
 	 */
 	constructor(defaultTime: number) {
-		console.assert(defaultTime === Math.floor(defaultTime), `Timer(${defaultTime}), default time was not an integer.`);
 		console.assert(defaultTime >= 0, `Timer(${defaultTime}), default time was not greater than or equal to zero.`);
 
 		this.defaultTime = defaultTime;
@@ -92,7 +91,6 @@ export class Timer {
 	 * @param time Seconds added to the timer in as an integer.
 	 */
 	addTime(time: number): void {
-		console.assert(time === Math.floor(time), `addTime(${time}), time was not an integer.`);
 		console.assert(time >= 0, `addTime(${time}), time was not greater than or equal to zero.`);
 
 		this.timeLeft += time;
