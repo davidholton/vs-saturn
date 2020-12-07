@@ -11,6 +11,7 @@ export class Pomodoro {
 	public timer: Timer;
 	
 	public state: PomodoroStates;
+	public stickyState: PomodoroStates;	// sticky state does not change when Saturn is paused
 	cycles: number;
 	maxCycles: number;
 
@@ -39,6 +40,8 @@ export class Pomodoro {
 		};
 
 		this.state = PomodoroStates.PAUSED;
+		this.stickyState = PomodoroStates.WORKING;
+
 		this.cycles = 0;
 
 		return;
@@ -63,7 +66,7 @@ export class Pomodoro {
 			}
 			this.timer.resume();
 
-			this.state = PomodoroStates.BREAK;
+			this.stickyState = this.state = PomodoroStates.BREAK;
 
 		} else if (this.state === PomodoroStates.BREAK) {
 			if (this.cycles === this.maxCycles) {
@@ -77,7 +80,7 @@ export class Pomodoro {
 			this.timer.reset(this.workTime);
 			this.timer.resume();
 
-			this.state = PomodoroStates.WORKING;
+			this.stickyState = this.state = PomodoroStates.WORKING;
 		}
 
 		return;
@@ -111,7 +114,7 @@ export class Pomodoro {
 	}
 
 	pause(): boolean {
-		if (this.state !== PomodoroStates.WORKING) {
+		if (this.state === PomodoroStates.PAUSED) {
 			return false;
 		}
 
@@ -128,6 +131,7 @@ export class Pomodoro {
 		this.timer.reset(this.workTime);
 		
 		this.state = PomodoroStates.PAUSED;
+		this.stickyState = PomodoroStates.WORKING;
 		this.cycles = 0;
 
 		return;

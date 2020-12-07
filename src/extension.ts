@@ -183,7 +183,9 @@ export function activate(context: vscode.ExtensionContext) {
 	// This line of code will only be executed once when your extension is activated
 	console.log("Congratulations, your extension 'vs-saturn' is now active!");
 
-	const taskList: TaskList = new TaskList();
+	const workTaskList: TaskList = new TaskList();
+	const breakTaskList: TaskList = new TaskList();
+	const tasklists: Array<TaskList> = [workTaskList, breakTaskList];
 
 	// Decrement the variable so our StatusBarItems below are arranged in order
 	let statusBarPriority: number = 0;
@@ -324,7 +326,7 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(vscode.commands.registerCommand("vs-saturn.tasklist", async () => {
 		console.log("vs-saturn.tasklist");
 
-		const items: Array<vscode.QuickPickItem> = taskList.tasks.map((x: ITask) => newQuickPickItem(x));
+		const items: Array<vscode.QuickPickItem> = tasklists[pomodoro.stickyState].tasks.map((x: ITask) => newQuickPickItem(x));
 		// For some reason if you declare and define the options with canPickMany
 		// you wont be able to use a for loop on the result of showQuickPick intuitively?
 		const options: vscode.QuickPickOptions = {
@@ -349,7 +351,7 @@ export function activate(context: vscode.ExtensionContext) {
 			});
 
 			// Saves the new completed state in the task list
-			taskList.tasks.map((task: ITask) => {
+			tasklists[pomodoro.stickyState].tasks.map((task: ITask) => {
 				task.completed = completedTasks.includes(task.label);
 			});
 		}
@@ -367,15 +369,15 @@ export function activate(context: vscode.ExtensionContext) {
 
 		if (result) {
 			// TODO: validate that this task doesnt already exist
-			taskList.addTask(result);
-			console.log("" + taskList);
+			tasklists[pomodoro.stickyState].addTask(result);
+			console.log("" + tasklists[pomodoro.stickyState]);
 		}
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand("vs-saturn.removetask", async () => {
 		console.log("vs-saturn.removetask");
 
-		const items: Array<vscode.QuickPickItem> = taskList.tasks.map((x: ITask) => newQuickPickItem(x, false));
+		const items: Array<vscode.QuickPickItem> = tasklists[pomodoro.stickyState].tasks.map((x: ITask) => newQuickPickItem(x, false));
 
 		const result = await vscode.window.showQuickPick(items, {
 			placeHolder: "Search for a task to remove",
@@ -385,7 +387,7 @@ export function activate(context: vscode.ExtensionContext) {
 		
 		if (result) {
 			result.map((x: any) => {
-				taskList.removeTask(x.label);
+				tasklists[pomodoro.stickyState].removeTask(x.label);
 			});
 		}
 	}));
@@ -394,14 +396,16 @@ export function activate(context: vscode.ExtensionContext) {
 		console.log("vs-saturn.cleartasks");
 
 		// TODO: Prompt the user if they actually want to clear the entire task list
-		taskList.tasks = [];
+		tasklists[pomodoro.stickyState].tasks = [];
 
 	}));
 
 	// Just add some temporary tasks into the list for show
-	taskList.addTask("Walk to get coffee");
-	taskList.addTask("Stretch");
-	taskList.addTask("Send a text to mom");
+	workTaskList.addTask("Sample Work Task 1");
+	workTaskList.addTask("Sample Work Task 2");
+	workTaskList.addTask("Sample Work Task 3");
+	breakTaskList.addTask("Sample Break Task 1");
+	breakTaskList.addTask("Sample Break Task 2");
 }
 
 // this method is called when your extension is deactivated
